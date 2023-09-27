@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { Layout, Menu } from "antd";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import Home from "../home/Home";
+import Dashboard from "../dashboard/Dashboard";
 import Clients from "../clients/Clients";
 import Pets from "../pets/Pets";
 import Medicaments from "../medicaments/Medicaments";
@@ -10,7 +10,13 @@ import Consults from "../consults/Consults";
 const { Header, Content } = Layout;
 
 const routes = [
-  { title: "Home", key: "/", path: "/", element: <Home />, isVisible: true },
+  {
+    title: "Home",
+    key: "/",
+    path: "/",
+    element: <Dashboard />,
+    isVisible: true,
+  },
   {
     title: "Clientes",
     key: "/clients",
