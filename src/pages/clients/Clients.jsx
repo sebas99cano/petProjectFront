@@ -11,6 +11,7 @@ const Clients = () => {
       columns={clientColumns}
       id={"clientTable"}
       title={"Clientes registrados"}
+      color={"primary"}
     />
   );
 };

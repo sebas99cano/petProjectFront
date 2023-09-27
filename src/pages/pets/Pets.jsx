@@ -11,6 +11,7 @@ const Pets = () => {
       columns={petColumns}
       id={"clientTable"}
       title={"Mascotas registrados"}
+      color={"alternative"}
     />
   );
 };

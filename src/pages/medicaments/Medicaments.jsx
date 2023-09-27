@@ -10,7 +10,8 @@ const Medicaments = () => {
       dataSource={medicamentList}
       columns={medicamentColumns}
       id={"clientTable"}
-      title={"Mascotas registrados"}
+      title={"Medicamentos registrados"}
+      color={"success"}
     />
   );
 };
