@@ -5,6 +5,7 @@ import Home from "../home/Home";
 import Clients from "../clients/Clients";
 import Pets from "../pets/Pets";
 import Medicaments from "../medicaments/Medicaments";
+import Consults from "../consults/Consults";
 
 const { Header, Content } = Layout;
 
@@ -22,6 +23,13 @@ const routes = [
     key: "/pets",
     path: "/pets",
     element: <Pets />,
+    isVisible: true,
+  },
+  {
+    title: "Consultas",
+    key: "/consults",
+    path: "/consults",
+    element: <Consults />,
     isVisible: true,
   },
   {

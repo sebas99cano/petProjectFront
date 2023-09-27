@@ -56,14 +56,14 @@ const useMedicaments = () => {
       key: "action",
       width: "10%",
       elipsis: false,
-      render: (client) => {
+      render: (medicament) => {
         return (
           <Space size="small">
             <Tooltip title={"Ver detalles"}>
               <Tag color={"blue"}>
                 <InfoCircleTwoTone
                   onClick={() => {
-                    console.log(client);
+                    console.log(medicament);
                   }}
                 />
               </Tag>
@@ -72,7 +72,7 @@ const useMedicaments = () => {
               <Tag color={"green"}>
                 <EditOutlined
                   onClick={() => {
-                    console.log(client);
+                    console.log(medicament);
                   }}
                 />
               </Tag>

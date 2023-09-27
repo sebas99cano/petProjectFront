@@ -1,4 +1,4 @@
-import { Card, Table } from "antd";
+import { Button, Card, Table } from "antd";
 import "../assets/dataTable.scss";
 const DataTable = ({
   loading,
@@ -8,12 +8,24 @@ const DataTable = ({
   id,
   color,
   rowKey,
+  addButton,
+  buttonText,
+  onClick,
 }) => {
   return (
     <>
       <Card className={"dataTableContainer"}>
         <Card className={`cardTitle ${color ? color : "dark"}`}>
           {title ? title : ""}
+          {addButton && (
+            <Button
+              type="text"
+              className="addButton"
+              onClick={onClick ? onClick : () => {}}
+            >
+              {buttonText ? buttonText : "Agregar"}
+            </Button>
+          )}
         </Card>
         <Table
           id={id ? id : ""}

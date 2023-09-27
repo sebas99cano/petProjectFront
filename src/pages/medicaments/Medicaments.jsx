@@ -9,7 +9,7 @@ const Medicaments = () => {
       loading={isLoading}
       dataSource={medicamentList}
       columns={medicamentColumns}
-      id={"clientTable"}
+      id={"medicamentTable"}
       title={"Medicamentos registrados"}
       color={"success"}
     />
