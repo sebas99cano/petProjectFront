@@ -100,6 +100,13 @@ const usePets = () => {
       ),
     },
     {
+      title: "Numero de consultas",
+
+      key: "client",
+      elipsis: true,
+      render: (pet) => <span>N: {pet.consults.length}</span>,
+    },
+    {
       title: "Raza",
       dataIndex: "race",
       key: "race",

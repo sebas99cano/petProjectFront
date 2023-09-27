@@ -11,7 +11,7 @@ const { Header, Content } = Layout;
 
 const routes = [
   {
-    title: "Home",
+    title: "Dashboard",
     key: "/",
     path: "/",
     element: <Dashboard />,
@@ -90,7 +90,7 @@ const AppLayout = () => {
         }}
       >
         <Menu
-          style={{ background: "#f5f5f5" }}
+          style={{ background: "#f5f5f5", width: "100%" }}
           mode="horizontal"
           selectedKeys={[location.pathname]}
           items={menuItems}

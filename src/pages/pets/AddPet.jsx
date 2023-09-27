@@ -96,6 +96,7 @@ const AddPet = ({ isVisible, petToEdit, handleCancel, handleCreate }) => {
             hasFeedback
           >
             <InputNumber
+              style={{ width: "100%" }}
               controls={false}
               min={0}
               max={999}

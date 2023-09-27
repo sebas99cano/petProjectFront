@@ -1,12 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { EditOutlined, InfoCircleTwoTone } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { baseUrl } from "../../helpers/Constants";
 import { Space, Tag, Tooltip, message } from "antd";
 
 const useConsults = () => {
   const [consultList, setConsultList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [consultToEdit, setConsultToEdit] = useState(null);
 
   useEffect(() => {
     getConsultList();
@@ -27,6 +29,59 @@ const useConsults = () => {
     }
   };
 
+  const closeModal = () => {
+    setConsultToEdit(null);
+    setIsVisible(false);
+  };
+
+  const openModal = () => {
+    setIsVisible(true);
+  };
+
+  const handleCreate = async (values, isEdit) => {
+    try {
+      if (isEdit) {
+        const response = await axios.put(
+          `${baseUrl}/api/consult/${consultToEdit.id}`,
+          {
+            ...values,
+          }
+        );
+        if (response.status === 200) {
+          message.success("Consulta editada correctamente");
+        }
+      } else {
+        const response = await axios.post(`${baseUrl}/api/consult`, {
+          ...values,
+        });
+        if (response.status === 201) {
+          message.success("Consulta creada correctamente");
+        }
+      }
+    } catch (error) {
+      message.error("ha ocurrido un error");
+      console.log(error);
+    } finally {
+      getConsultList();
+      setConsultToEdit(null);
+      setIsVisible(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`${baseUrl}/api/consult/${id}`);
+      if (response.status === 204) {
+        message.success("Consulta eliminada correctamente");
+      }
+    } catch (error) {
+      message.error("ha ocurrido un error");
+      console.log(error);
+    } finally {
+      getConsultList();
+    }
+  };
+
   const consultColumns = [
     {
       title: "Description",
@@ -44,12 +99,22 @@ const useConsults = () => {
       ),
     },
     {
-      title: "pet",
+      title: "Mascota",
       key: "pet",
       elipsis: true,
       render: (consult) => {
         return <span>{consult.pet.name}</span>;
       },
+    },
+    {
+      title: "Medicamentos",
+      key: "medicaments",
+      render: (consult) =>
+        consult.medicaments.map((medicament) => (
+          <span key={medicament.id}>
+            {medicament.name} <br />
+          </span>
+        )),
     },
     {
       title: "Acciones",
@@ -59,20 +124,27 @@ const useConsults = () => {
       render: (consult) => {
         return (
           <Space size="small">
-            <Tooltip title={"Ver detalles"}>
-              <Tag color={"blue"}>
-                <InfoCircleTwoTone
-                  onClick={() => {
-                    console.log(consult);
-                  }}
-                />
-              </Tag>
-            </Tooltip>
             <Tooltip title={"Editar"}>
               <Tag color={"green"}>
                 <EditOutlined
                   onClick={() => {
-                    console.log(consult);
+                    setConsultToEdit({
+                      ...consult,
+                      petId: consult.pet.id,
+                      medicamentsId: consult.medicaments.map(
+                        (medicament) => medicament.id
+                      ),
+                    });
+                    setIsVisible(true);
+                  }}
+                />
+              </Tag>
+            </Tooltip>
+            <Tooltip title={"Eliminar"}>
+              <Tag color={"red"}>
+                <DeleteOutlined
+                  onClick={() => {
+                    handleDelete(consult.id);
                   }}
                 />
               </Tag>
@@ -83,7 +155,16 @@ const useConsults = () => {
     },
   ];
 
-  return { consultList, isLoading, consultColumns };
+  return {
+    consultList,
+    isLoading,
+    consultColumns,
+    isVisible,
+    closeModal,
+    openModal,
+    handleCreate,
+    consultToEdit,
+  };
 };
 
 export default useConsults;
