@@ -56,7 +56,6 @@ const useClients = () => {
         if (response.status === 201) {
           message.success("Cliente creado correctamente");
         }
-        console.log("Creado", response);
       }
     } catch (error) {
       console.log(error);

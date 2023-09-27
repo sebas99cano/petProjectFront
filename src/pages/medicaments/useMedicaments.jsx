@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Space, Tag, Tooltip } from "antd";
-import { EditOutlined, InfoCircleTwoTone } from "@ant-design/icons";
+import { Space, Tag, Tooltip, message } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { baseUrl } from "../../helpers/Constants";
 import axios from "axios";
 
 const useMedicaments = () => {
   const [medicamentList, setMedicamentList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [medicamentToEdit, setMedicamentToEdit] = useState(null);
 
   useEffect(() => {
     getMedicamentList();
@@ -23,6 +25,57 @@ const useMedicaments = () => {
       console.log(error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const closeModal = () => {
+    setMedicamentToEdit(null);
+    setIsVisible(false);
+  };
+
+  const openModal = () => {
+    setIsVisible(true);
+  };
+
+  const handleCreate = async (values, isEdit) => {
+    try {
+      if (isEdit) {
+        const response = await axios.put(
+          `${baseUrl}/api/medicament/${medicamentToEdit.id}`,
+          {
+            ...values,
+          }
+        );
+        if (response.status === 200) {
+          message.success("Medicamento editado correctamente");
+        }
+      } else {
+        const response = await axios.post(`${baseUrl}/api/medicament`, {
+          ...values,
+        });
+        if (response.status === 201) {
+          message.success("Medicamento creado correctamente");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      getMedicamentList();
+      setMedicamentToEdit(null);
+      setIsVisible(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`${baseUrl}/api/medicament/${id}`);
+      if (response.status === 204) {
+        message.success("Medicamento eliminado correctamente");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      getMedicamentList();
     }
   };
 
@@ -59,20 +112,21 @@ const useMedicaments = () => {
       render: (medicament) => {
         return (
           <Space size="small">
-            <Tooltip title={"Ver detalles"}>
-              <Tag color={"blue"}>
-                <InfoCircleTwoTone
-                  onClick={() => {
-                    console.log(medicament);
-                  }}
-                />
-              </Tag>
-            </Tooltip>
             <Tooltip title={"Editar"}>
               <Tag color={"green"}>
                 <EditOutlined
                   onClick={() => {
-                    console.log(medicament);
+                    setMedicamentToEdit(medicament);
+                    setIsVisible(true);
+                  }}
+                />
+              </Tag>
+            </Tooltip>
+            <Tooltip title={"Eliminar"}>
+              <Tag color={"red"}>
+                <DeleteOutlined
+                  onClick={() => {
+                    handleDelete(medicament.id);
                   }}
                 />
               </Tag>
@@ -82,7 +136,16 @@ const useMedicaments = () => {
       },
     },
   ];
-  return { medicamentList, isLoading, medicamentColumns };
+  return {
+    medicamentList,
+    isLoading,
+    medicamentColumns,
+    isVisible,
+    closeModal,
+    openModal,
+    handleCreate,
+    medicamentToEdit,
+  };
 };
 
 export default useMedicaments;
