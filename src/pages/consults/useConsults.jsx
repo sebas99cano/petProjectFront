@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { EditOutlined, InfoCircleTwoTone } from "@ant-design/icons";
 import { baseUrl } from "../../helpers/Constants";
-import { Space, Tag, Tooltip } from "antd";
+import { Space, Tag, Tooltip, message } from "antd";
 
 const useConsults = () => {
   const [consultList, setConsultList] = useState([]);
@@ -20,6 +20,7 @@ const useConsults = () => {
         setConsultList(response.data);
       }
     } catch (error) {
+      message.error("ha ocurrido un error");
       console.log(error);
     } finally {
       setIsLoading(false);

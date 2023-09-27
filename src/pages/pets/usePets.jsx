@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Space, Tag, Tooltip } from "antd";
-import { EditOutlined, InfoCircleTwoTone } from "@ant-design/icons";
+import { Space, Tag, Tooltip, message } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { baseUrl } from "../../helpers/Constants";
 import axios from "axios";
 
 const usePets = () => {
   const [petList, setPetList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [petToEdit, setPetToEdit] = useState(null);
 
   useEffect(() => {
     getPetList();
@@ -20,9 +22,60 @@ const usePets = () => {
         setPetList(response.data);
       }
     } catch (error) {
+      message.error("ha ocurrido un error");
       console.log(error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const closeModal = () => {
+    setPetToEdit(null);
+    setIsVisible(false);
+  };
+
+  const openModal = () => {
+    setIsVisible(true);
+  };
+
+  const handleCreate = async (values, isEdit) => {
+    try {
+      if (isEdit) {
+        const response = await axios.put(`${baseUrl}/api/pet/${petToEdit.id}`, {
+          ...values,
+        });
+        if (response.status === 200) {
+          message.success("Mascota editada correctamente");
+        }
+      } else {
+        const response = await axios.post(`${baseUrl}/api/pet`, {
+          ...values,
+        });
+        if (response.status === 201) {
+          message.success("Mascota creado correctamente");
+        }
+      }
+    } catch (error) {
+      message.error("ha ocurrido un error");
+      console.log(error);
+    } finally {
+      getPetList();
+      setPetToEdit(null);
+      setIsVisible(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`${baseUrl}/api/pet/${id}`);
+      if (response.status === 204) {
+        message.success("Mascota eliminada correctamente");
+      }
+    } catch (error) {
+      message.error("ha ocurrido un error");
+      console.log(error);
+    } finally {
+      getPetList();
     }
   };
 
@@ -34,6 +87,17 @@ const usePets = () => {
       elipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       showSorterTooltip: false,
+    },
+    {
+      title: "Dueño",
+
+      key: "client",
+      elipsis: true,
+      render: (pet) => (
+        <span>
+          {pet.client.name} - {pet.client.dni}
+        </span>
+      ),
     },
     {
       title: "Raza",
@@ -52,7 +116,7 @@ const usePets = () => {
       showSorterTooltip: false,
     },
     {
-      title: "Peso",
+      title: "Peso (KG)",
       dataIndex: "weight",
       key: "weight",
     },
@@ -64,20 +128,21 @@ const usePets = () => {
       render: (pet) => {
         return (
           <Space size="small">
-            <Tooltip title={"Ver detalles"}>
-              <Tag color={"blue"}>
-                <InfoCircleTwoTone
-                  onClick={() => {
-                    console.log(pet);
-                  }}
-                />
-              </Tag>
-            </Tooltip>
             <Tooltip title={"Editar"}>
               <Tag color={"green"}>
                 <EditOutlined
                   onClick={() => {
-                    console.log(pet);
+                    setPetToEdit({ ...pet, clientId: pet.client.id });
+                    setIsVisible(true);
+                  }}
+                />
+              </Tag>
+            </Tooltip>
+            <Tooltip title={"Eliminar"}>
+              <Tag color={"red"}>
+                <DeleteOutlined
+                  onClick={() => {
+                    handleDelete(pet.id);
                   }}
                 />
               </Tag>
@@ -88,7 +153,16 @@ const usePets = () => {
     },
   ];
 
-  return { petList, isLoading, petColumns };
+  return {
+    petList,
+    isLoading,
+    petColumns,
+    isVisible,
+    closeModal,
+    openModal,
+    handleCreate,
+    petToEdit,
+  };
 };
 
 export default usePets;

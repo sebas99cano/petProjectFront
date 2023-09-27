@@ -22,6 +22,7 @@ const useMedicaments = () => {
         setMedicamentList(response.data);
       }
     } catch (error) {
+      message.error("ha ocurrido un error");
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -58,6 +59,7 @@ const useMedicaments = () => {
         }
       }
     } catch (error) {
+      message.error("ha ocurrido un error");
       console.log(error);
     } finally {
       getMedicamentList();
@@ -73,6 +75,7 @@ const useMedicaments = () => {
         message.success("Medicamento eliminado correctamente");
       }
     } catch (error) {
+      message.error("ha ocurrido un error");
       console.log(error);
     } finally {
       getMedicamentList();

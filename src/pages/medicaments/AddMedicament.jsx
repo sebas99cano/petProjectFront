@@ -42,7 +42,7 @@ const AddMedicament = ({
       >
         <Form
           initialValues={initialValues}
-          labelCol={{ span: 10 }}
+          labelCol={{ span: 8 }}
           wrapperCol={{ span: 13 }}
           onFinish={(values) =>
             handleCreate(values, initialValues ? true : false)

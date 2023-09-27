@@ -22,6 +22,7 @@ const useClients = () => {
         setClientList(response.data);
       }
     } catch (error) {
+      message.error("ha ocurrido un error");
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -58,6 +59,7 @@ const useClients = () => {
         }
       }
     } catch (error) {
+      message.error("ha ocurrido un error");
       console.log(error);
     } finally {
       getClientList();
@@ -73,6 +75,7 @@ const useClients = () => {
         message.success("Cliente eliminado correctamente");
       }
     } catch (error) {
+      message.error("ha ocurrido un error");
       console.log(error);
     } finally {
       getClientList();
@@ -100,6 +103,16 @@ const useClients = () => {
       elipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       showSorterTooltip: false,
+    },
+    {
+      title: "Mascotas",
+      key: "pet",
+      render: (client) =>
+        client.pets.map((pet) => (
+          <span key={pet.id}>
+            {pet.name} <br />
+          </span>
+        )),
     },
     {
       title: "Teléfono",

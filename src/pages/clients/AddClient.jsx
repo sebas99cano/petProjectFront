@@ -27,7 +27,7 @@ const AddClient = ({ isVisible, clientToEdit, handleCancel, handleCreate }) => {
       >
         <Form
           initialValues={initialValues}
-          labelCol={{ span: 10 }}
+          labelCol={{ span: 8 }}
           wrapperCol={{ span: 13 }}
           onFinish={(values) =>
             handleCreate(values, initialValues ? true : false)
@@ -36,7 +36,7 @@ const AddClient = ({ isVisible, clientToEdit, handleCancel, handleCreate }) => {
           <hr style={{ margin: "20px" }} />
           <Form.Item
             name={"dni"}
-            label="Documento de identidad"
+            label="DNI"
             rules={rules.nameRules}
             hasFeedback
           >
